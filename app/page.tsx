@@ -8,6 +8,7 @@ interface QuestionConfig {
   subject: string;
   questionTypes: string[];
   difficulty: string;
+  studentClass: string;
   customInstructions?: string;
   questionsByType?: {
     mcq: number;
@@ -34,6 +35,7 @@ export default function Home() {
     subject: 'mathematics',
     questionTypes: ['problem-solving', 'conceptual'],
     difficulty: 'mixed',
+    studentClass: '10',
   });
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,6 +94,7 @@ export default function Home() {
         formData.append('questionTypes', type);
       });
       formData.append('difficulty', config.difficulty);
+      formData.append('studentClass', config.studentClass);
       
       if (config.customInstructions) {
         formData.append('customInstructions', config.customInstructions);
@@ -185,15 +188,25 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 py-4 sm:py-8 px-3 sm:px-4">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <header className="text-center text-white mb-12">
-          <h1 className="text-5xl font-bold mb-4 drop-shadow-lg">
-            📚 AI Question Generator
-          </h1>
-          <p className="text-xl opacity-90">
+        <header className="text-center text-white mb-8 sm:mb-12">
+          <div className="mb-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-2 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300">
+              📚 STUDYBUDDY
+            </h1>
+            <div className="inline-block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+              <p className="text-xs sm:text-sm font-semibold text-yellow-200">
+                ⚡ Powered by INFOTECH SERVICES
+              </p>
+            </div>
+          </div>
+          <p className="text-lg sm:text-xl md:text-2xl opacity-90 font-medium">
             Generate customized questions from your textbooks using AI
+          </p>
+          <p className="text-sm sm:text-base opacity-80 mt-2">
+            Smart. Fast. Personalized for Every Student.
           </p>
         </header>
 
@@ -201,28 +214,28 @@ export default function Home() {
         <QuestionCustomizer config={config} onConfigChange={setConfig} />
 
         {/* Upload Section */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">
-            Upload Your PDF Textbook
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">
+            📤 Upload Your PDF Textbook
           </h2>
 
           <div
-            className={`border-4 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all ${
+            className={`border-3 sm:border-4 border-dashed rounded-lg sm:rounded-xl p-6 sm:p-12 text-center cursor-pointer transition-all ${
               isDragging
-                ? 'border-purple-600 bg-purple-50 scale-105'
-                : 'border-purple-300 bg-purple-50 hover:bg-purple-100'
+                ? 'border-blue-600 bg-blue-50 scale-105'
+                : 'border-blue-300 bg-gradient-to-br from-blue-50 to-indigo-50 hover:bg-blue-100'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <div className="text-6xl mb-4">📄</div>
-            <div className="text-xl text-gray-700 mb-2">
-              {file ? file.name : 'Drop your PDF file here or click to browse'}
+            <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">📄</div>
+            <div className="text-base sm:text-xl text-gray-700 mb-2 px-2">
+              {file ? <span className="font-semibold text-blue-600">{file.name}</span> : 'Drop your PDF file here or click to browse'}
             </div>
-            <div className="text-sm text-gray-500">
-              Maximum file size: 16MB
+            <div className="text-xs sm:text-sm text-gray-500">
+              Maximum file size: 16MB • Supports PDFs only
             </div>
             <input
               ref={fileInputRef}
@@ -233,19 +246,19 @@ export default function Home() {
             />
           </div>
 
-          <div className="mt-6 text-center">
+          <div className="mt-4 sm:mt-6 text-center">
             <button
               onClick={handleUpload}
               disabled={!file || loading}
-              className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-12 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
+              className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-full text-base sm:text-lg font-bold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 w-full sm:w-auto"
             >
               {loading ? (
-                <span className="flex items-center gap-2">
-                  <span className="inline-block w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span className="flex items-center justify-center gap-2">
+                  <span className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-3 border-white border-t-transparent rounded-full animate-spin"></span>
                   Generating Questions...
                 </span>
               ) : (
-                '✨ Generate Questions'
+                '✨ Generate Questions Now'
               )}
             </button>
           </div>
@@ -253,38 +266,44 @@ export default function Home() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-100 border-2 border-red-400 text-red-700 px-6 py-4 rounded-lg mb-8">
-            <strong>Error:</strong> {error}
+          <div className="bg-red-50 border-2 border-red-300 rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg animate-fadeIn">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl sm:text-3xl">⚠️</span>
+              <div>
+                <h3 className="font-bold text-red-800 text-base sm:text-lg mb-1">Error Occurred</h3>
+                <p className="text-red-700 text-sm sm:text-base">{error}</p>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Results Section */}
         {latexContent && (
-          <div className="bg-white rounded-2xl shadow-2xl p-8 animate-fadeIn">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Generated Questions
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 animate-fadeIn">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+                ✅ Generated Questions
               </h2>
-              <div className="flex gap-3 flex-wrap">
+              <div className="flex gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
                 <button
                   onClick={handleDownloadLatex}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition-all hover:scale-105"
+                  className="bg-blue-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold shadow hover:bg-blue-700 transition-all hover:scale-105 flex-1 sm:flex-none"
                 >
-                  📥 Download LaTeX
+                  📥 LaTeX
                 </button>
                 <button
                   onClick={() => handleDownloadPDF(false)}
                   disabled={loading}
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-green-700 transition-all disabled:opacity-50 hover:scale-105"
+                  className="bg-green-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold shadow hover:bg-green-700 transition-all disabled:opacity-50 hover:scale-105 flex-1 sm:flex-none"
                 >
-                  {loading ? 'Compiling...' : '📄 Questions Only PDF'}
+                  {loading ? 'Compiling...' : '📄 PDF (Q)'}
                 </button>
                 <button
                   onClick={() => handleDownloadPDF(true)}
                   disabled={loading}
-                  className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-purple-700 transition-all disabled:opacity-50 hover:scale-105"
+                  className="bg-purple-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold shadow hover:bg-purple-700 transition-all disabled:opacity-50 hover:scale-105 flex-1 sm:flex-none"
                 >
-                  {loading ? 'Compiling...' : '📚 PDF with Solutions'}
+                  {loading ? 'Compiling...' : '📚 PDF (Q+S)'}
                 </button>
               </div>
             </div>
@@ -295,16 +314,23 @@ export default function Home() {
 
         {/* Loading Indicator */}
         {loading && !latexContent && (
-          <div className="bg-white rounded-2xl shadow-2xl p-12 text-center">
-            <div className="inline-block w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-xl text-gray-700">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-8 sm:p-12 text-center">
+            <div className="inline-block w-12 h-12 sm:w-16 sm:h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-lg sm:text-xl text-gray-700">
               Processing your textbook and generating questions...
             </p>
-            <p className="text-sm text-gray-500 mt-2">
-              This may take a minute or two
+            <p className="text-xs sm:text-sm text-gray-500 mt-2">
+              This may take a minute or two ⏱️
             </p>
           </div>
         )}
+        
+        {/* Footer */}
+        <footer className="text-center text-white/80 mt-8 sm:mt-12 pb-4">
+          <p className="text-xs sm:text-sm">
+            © 2026 STUDYBUDDY • Powered by INFOTECH SERVICES • All Rights Reserved
+          </p>
+        </footer>
       </div>
     </div>
   );

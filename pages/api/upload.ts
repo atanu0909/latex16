@@ -314,6 +314,7 @@ EXAMPLES:
 `;
 
   const patternSection = patternText
+<<<<<<< HEAD
     ? `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 QUESTION PAPER PATTERN/FORMAT TO FOLLOW (HIGHEST PRIORITY):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -402,11 +403,19 @@ DO NOT say "Okay", "I understand", "Here is", or any other commentary.
 Start your response directly with \\documentclass and nothing else before it.
 
 You are an expert ${subject} educator and question paper creator. ${patternText ? 'You have been provided with a question paper PATTERN/FORMAT that you MUST follow EXACTLY.' : 'Based on the following educational content, generate comprehensive questions with solutions.'}
+=======
+    ? `\n\n=== CRITICAL: QUESTION PAPER PATTERN TO REPLICATE EXACTLY ===\n\n${patternText}\n\n=== END OF PATTERN ===\n\nYOU MUST ANALYZE AND REPLICATE THIS PATTERN PRECISELY:\n\n1. STRUCTURE ANALYSIS:\n   - Identify all section divisions (Section A, B, C, etc.)\n   - Note the exact numbering format (Q.1, Question 1, 1., etc.)\n   - Observe spacing between questions\n   - Identify header/footer format\n\n2. MARK DISTRIBUTION:\n   - Count questions in each mark category\n   - Note how marks are indicated [X marks], (X), etc.\n   - Match the total marks and time duration\n\n3. QUESTION FORMAT:\n   - Replicate the exact question phrasing style\n   - Match MCQ format: (a), (b), (c), (d) OR A., B., C., D.\n   - Use same indentation and spacing\n   - Copy the instruction format exactly\n\n4. LAYOUT ELEMENTS:\n   - Replicate header boxes and borders\n   - Match font styles (\\\\textbf, \\\\large, etc.)\n   - Use same page margins and geometry\n   - Include any tables, rules, or decorative elements\n\n5. CONTENT STYLE:\n   - Match the difficulty level shown in pattern\n   - Use similar language and terminology\n   - Keep question lengths comparable\n   - Maintain same level of detail\n\nYOUR GENERATED OUTPUT MUST BE VISUALLY AND STRUCTURALLY INDISTINGUISHABLE FROM THE PATTERN.`
+    : '';
 
-Content:
+  const prompt = `
+You are an expert ${subject} educator and LaTeX document formatter.
+>>>>>>> 57224a0 (pdf comes right but in website it is latex when we upload pattern)
+
+${patternSection ? '>>> PRIORITY 1: PATTERN MATCHING <<<\n' + patternSection + '\n\n>>> PRIORITY 2: CONTENT SOURCE <<<\n' : ''}Content:
 ${pdfText}
-${patternSection}
+${patternSection ? '' : '\n\nPlease generate high-quality ' + subject + ' questions based on this content.' + questionBreakdown}
 
+<<<<<<< HEAD
 ${patternText ? '\n⚠️⚠️⚠️ CRITICAL: Your PRIMARY task is to EXACTLY replicate the pattern/format of the uploaded question paper sample while creating NEW questions based on the content provided. Think of it as creating a question paper that uses the EXACT SAME template/format as the pattern, but with different questions.\n' : ''}
 ${selectedGuideline}
 
@@ -734,6 +743,11 @@ CRITICAL LATEX SYNTAX REQUIREMENTS (MUST FOLLOW TO AVOID COMPILATION ERRORS):
 ⚠️ REMEMBER: One syntax error will break the entire PDF compilation. Be meticulous!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `}
+=======
+${patternSection ? '\n\n>>> GENERATION INSTRUCTIONS <<<\n\nYou MUST:\n1. Extract the EXACT LaTeX structure from the pattern above\n2. Keep ALL formatting elements: \\\\documentclass, \\\\usepackage, \\\\geometry, headers, footers, boxes, tables, rules\n3. Maintain the EXACT question numbering and section format\n4. Match the mark distribution precisely\n5. Generate NEW questions (from the content PDF) that fit this EXACT format\n6. Use the same spacing, fonts, and layout\n7. Include solutions in the SAME format as shown in pattern (if pattern has solutions)\n\nYour output should be ready-to-compile LaTeX that looks IDENTICAL to the pattern but with new questions from the content.' : 'Question Requirements:\n- Question types: ' + questionTypeDesc + '\n- Difficulty level: ' + difficulty + '\n- Each question should be clear and well-formatted\n- Provide detailed step-by-step solutions\n- Use proper LaTeX notation for all mathematical expressions' + customInstructionsSection + '\n\nFormat your response ENTIRELY in LaTeX using this EXACT structure for a proper exam paper:'}
+
+${patternSection ? '' : '\n\\documentclass[12pt,a4paper]{article}\n\\usepackage{amsmath}\n\\usepackage{amssymb}\n\\usepackage{geometry}\n\\usepackage{enumitem}\n\\usepackage{fancyhdr}\n\\usepackage{graphicx}\n\\geometry{margin=0.75in, top=1in, bottom=1in}\n\n\\pagestyle{fancy}\n\\fancyhf{}\n\\fancyhead[L]{\\textbf{' + subject.charAt(0).toUpperCase() + subject.slice(1) + ' Examination}}\n\\fancyhead[R]{\\textbf{Page \\thepage}}\n\\fancyfoot[C]{\\small All questions carry marks as indicated}\n\n\\begin{document}\n\n% Header Section\n\\begin{center}\n{\\Large \\textbf{EXAMINATION PAPER}}\\\\[0.3cm]\n{\\large \\textbf{Subject: ' + subject.charAt(0).toUpperCase() + subject.slice(1) + '}}\\\\[0.2cm]\n{\\textbf{Difficulty Level: ' + difficulty.charAt(0).toUpperCase() + difficulty.slice(1) + '}}\\\\[0.2cm]\n\\rule{\\textwidth}{0.4pt}\n\\end{center}\n\n\\vspace{0.3cm}\n\n% Instructions Box\n\\noindent\\fbox{\\parbox{\\dimexpr\\textwidth-2\\fboxsep-2\\fboxrule}{\n\\textbf{INSTRUCTIONS TO CANDIDATES:}\\\\[0.2cm]\n\\begin{itemize}[leftmargin=*, itemsep=0pt]\n\\item Read all questions carefully before attempting.\n\\item Answer all questions in the space provided or on separate sheets.\n\\item Show all working for full credit.\n\\item Marks for each question are indicated in brackets.\n\\item Use of calculator is permitted (if applicable).\n' + (questionBreakdown ? '\\item ' + questionBreakdown.replace(/\n/g, '\n\\item ').replace('1 Mark Questions:', '\\textbf{Section A:} 1 Mark Questions').replace('Questions by Marks:', '\\textbf{Section B:} Higher Mark Questions') : '') + '\n\\end{itemize}\n}}\n\n\\vspace{0.5cm}\n\n% Questions Section\n\\section*{QUESTIONS}\n\n[Now generate each question using this EXACT format:\n\n\\subsection*{Question 1 [X marks]}\n[Question text with proper LaTeX math formatting]\n\n\\subsection*{Solution}\n[Detailed solution with step-by-step explanation]\n\n\\vspace{0.5cm}\n\nRepeat for all questions, ensuring proper numbering and mark allocation.]\n\n\\end{document}\n\nCRITICAL FORMATTING REQUIREMENTS:\n- Use \\subsection*{Question N [X marks]} for each question header\n- Use \\subsection*{Solution} for each solution\n- Use $...$ for inline math and $$...$$ or \\[...\\] for display math\n- For MCQs: Use (a), (b), (c), (d) format\n- For Fill in Blanks: Use \\underline{\\hspace{3cm}} for blanks\n- Add \\vspace{0.5cm} between questions for spacing\n- Make questions relevant to the provided content\n- STRICTLY follow the custom instructions if provided\n- Number questions consecutively starting from 1'}
+>>>>>>> 57224a0 (pdf comes right but in website it is latex when we upload pattern)
 `;
 
   const result = await model.generateContent(prompt);

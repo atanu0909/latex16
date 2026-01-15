@@ -258,8 +258,13 @@ export default function Home() {
                 </button>
               )}
             </div>
+<<<<<<< HEAD
             <p className="text-xs sm:text-sm text-gray-700 mb-3 font-medium">
               ✨ Upload a sample question paper and AI will replicate its <span className="text-purple-700 font-bold">EXACT</span> format, structure, instructions, marking scheme, section divisions, and presentation style!
+=======
+            <p className="text-xs sm:text-sm text-gray-600 mb-3">
+              Upload a sample question paper PDF. The AI will <strong className="text-purple-700">exactly replicate</strong> its format, structure, numbering, sections, mark distribution, and overall layout in the generated PDF.
+>>>>>>> 57224a0 (pdf comes right but in website it is latex when we upload pattern)
             </p>
             <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-3">
               <p className="text-xs text-purple-900 font-semibold mb-2">🎯 What gets replicated:</p>
@@ -282,7 +287,13 @@ export default function Home() {
                 {patternFile ? (
                   <div>
                     <span className="font-semibold text-purple-600">{patternFile.name}</span>
+<<<<<<< HEAD
                     <p className="text-xs text-green-600 mt-1">✓ Pattern loaded - AI will match this format exactly!</p>
+=======
+                    <div className="text-xs text-green-600 mt-2 font-medium">
+                      ✓ Pattern uploaded - Generated PDF will match this format exactly!
+                    </div>
+>>>>>>> 57224a0 (pdf comes right but in website it is latex when we upload pattern)
                   </div>
                 ) : (
                   <div>

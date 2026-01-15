@@ -23,6 +23,7 @@ export default function LatexPreview({ content }: Props) {
       const parsedQuestions: Question[] = [];
       
       console.log('Starting to parse LaTeX content...');
+      console.log('Full content length:', content.length);
       
       // First, extract just the questions section to avoid parsing preamble
       let questionsContent = content;
@@ -34,12 +35,24 @@ export default function LatexPreview({ content }: Props) {
       }
       
       // Look for the main questions section after instructions
-      const questionsSectionMatch = questionsContent.match(/(?:SECTION:\s*QUESTIONS|Questions Section)([\s\S]*?)(?=\\end\{document\}|$)/i);
-      if (questionsSectionMatch) {
-        questionsContent = questionsSectionMatch[1];
+      // Try multiple section markers
+      const sectionMarkers = [
+        /(?:SECTION:\s*QUESTIONS|Questions Section|QUESTIONS|BEGIN QUESTIONS)([\s\S]*?)(?=\\end\{document\}|$)/i,
+        /(?:\\end\{tabular\}[\s\S]*?\\end\{tabular\})([\s\S]*?)(?=\\end\{document\}|$)/, // After header tables
+        /(?:\\end\{enumerate\}[\s\S]{0,200})(\\textbf\{Q|\\noindent[\s\S]*?Q\.|^\s*\d+\.)/m // After instructions enumerate
+      ];
+      
+      for (const marker of sectionMarkers) {
+        const match = questionsContent.match(marker);
+        if (match) {
+          questionsContent = match[1] || match[0];
+          console.log('Found questions section with marker');
+          break;
+        }
       }
       
-      console.log('Questions content length:', questionsContent.length);
+      console.log('Questions content length after extraction:', questionsContent.length);
+      console.log('First 500 chars:', questionsContent.substring(0, 500));
       
       // ENHANCED: Try multiple patterns in order of specificity
       const patterns = [
@@ -48,25 +61,35 @@ export default function LatexPreview({ content }: Props) {
           regex: /\\noindent\\textbf\{Q\.(\d+)\}\s*\\hfill\s*\\textbf\{\[([^\]]+)\]\}([\s\S]*?)(?=\\noindent\\textbf\{Q\.\d+\}|\\end\{document\}|$)/g,
           solutionPattern: /([\s\S]*?)\\noindent\\textbf\{Solution:\}([\s\S]*?)(?=\\noindent\\rule|$)/
         },
-        // Pattern 2: \textbf{Q.N} \hfill format (common in patterns)
+        // Pattern 2: \textbf{Q.N} \hfill format (common in patterns) - MORE FLEXIBLE
         {
           regex: /\\textbf\{Q\.(\d+)\}\s*\\hfill\s*\\textbf\{\[([^\]]+)\]\}([\s\S]*?)(?=\\textbf\{Q\.\d+\}|\\end\{document\}|$)/g,
-          solutionPattern: /([\s\S]*?)\\textbf\{Solution[:\.]?\}([\s\S]*?)(?=\\vspace|\\textbf\{Q\.|$)/
+          solutionPattern: /([\s\S]*?)(?:\\textbf\{)?Solution[:\.]?(?:\})?[\s\S]*?([\s\S]*?)$/
+        },
+        // Pattern 2b: \textbf{Q.N} without \hfill (pattern variations)
+        {
+          regex: /\\textbf\{Q\.(\d+)\}[\s\S]*?\[([^\]]+)\]([\s\S]*?)(?=\\textbf\{Q\.\d+\}|\\end\{document\}|$)/g,
+          solutionPattern: /([\s\S]*?)(?:\\textbf\{)?(?:Solution|Ans)[:\.\)]?(?:\})?[\s\S]*?([\s\S]*?)$/
         },
         // Pattern 3: \subsection* format
         {
           regex: /\\subsection\*\{(?:Q\.|Question)\s*(\d+)\s*\[([^\]]+)\]\}([\s\S]*?)(?=\\subsection\*\{(?:Q\.|Question)|\\end\{document\}|$)/g,
           solutionPattern: /([\s\S]*?)\\subsection\*\{Solution\}([\s\S]*?)(?=\\vspace|$)/
         },
-        // Pattern 4: Simple numbered format (Q1, Q.1, Question 1, etc.)
+        // Pattern 4: Simple numbered format (Q1, Q.1, Question 1, etc.) - very flexible
         {
-          regex: /(?:^|\\noindent\s*)(?:\\textbf\{)?(?:Q\.?|Question)\s*(\d+)(?:\})?(?:\s*\[([^\]]+)\])?[:\.\)]?\s*([\s\S]*?)(?=(?:^|\\noindent\s*)(?:\\textbf\{)?(?:Q\.?|Question)\s*\d+|\\end\{document\}|$)/gm,
-          solutionPattern: /([\s\S]*?)(?:\\textbf\{)?Solution[:\.\)]?(?:\})?[\s\S]*?([\s\S]*?)$/
+          regex: /(?:^|\\noindent\s*)(?:\\textbf\{)?(?:Q\.?|Question)\s*(\d+)(?:\})?(?:\s*[\(\[]?([^\]\)]*?marks?)[\]\)]?)?[:\.\)]?\s*([\s\S]*?)(?=(?:^|\\noindent\s*)(?:\\textbf\{)?(?:Q\.?|Question)\s*\d+|\\end\{document\}|$)/gm,
+          solutionPattern: /([\s\S]*?)(?:\\textbf\{)?(?:Solution|Answer|Ans)[:\.\)]?(?:\})?[\s\S]*?([\s\S]*?)$/
         },
         // Pattern 5: Section-based
         {
           regex: /\\section\*\{(?:Question\s+)?(\d+)(?:\s*\[([^\]]+)\])?\}([\s\S]*?)(?=\\section\*\{|\\end\{document\}|$)/g,
           solutionPattern: /([\s\S]*?)\\section\*\{Solution\}([\s\S]*?)$/
+        },
+        // Pattern 6: Number with period at start of line (very common in custom patterns)
+        {
+          regex: /(?:^|\n)\s*(\d+)[\.\)]\s*([\s\S]*?)(?=(?:^|\n)\s*\d+[\.\)]|\\end\{document\}|$)/gm,
+          solutionPattern: /([\s\S]*?)(?:Solution|Answer|Ans)[:\.\)]?\s*([\s\S]*?)$/
         }
       ];
       
@@ -74,16 +97,28 @@ export default function LatexPreview({ content }: Props) {
         let match;
         pattern.regex.lastIndex = 0;
         
+        console.log('Trying pattern with regex:', pattern.regex.source.substring(0, 100));
+        
         while ((match = pattern.regex.exec(questionsContent)) !== null) {
           const questionNumber = parseInt(match[1]);
-          const marks = match[2] || '';
-          const fullContent = match[3];
+          const marks = match[2] || 'N/A';
+          const fullContent = match[3] || match[2]; // Some patterns have content in different groups
           
-          if (isNaN(questionNumber) || !fullContent || fullContent.trim().length < 10) continue;
+          console.log(`Found potential question ${questionNumber}, content length: ${fullContent?.length}`);
           
-          // Filter out instructions/non-questions
-          if (fullContent.toLowerCase().includes('answer any') ||
-              fullContent.toLowerCase().includes('instructions to candidates')) {
+          if (isNaN(questionNumber) || !fullContent || fullContent.trim().length < 5) {
+            console.log('Skipping - invalid number or too short');
+            continue;
+          }
+          
+          // Filter out instructions/non-questions - be more lenient
+          const lowerContent = fullContent.toLowerCase();
+          if (lowerContent.includes('instructions to candidates') ||
+              lowerContent.includes('general instructions') ||
+              (lowerContent.includes('answer any') && fullContent.length < 100) ||
+              lowerContent.includes('examination paper') ||
+              lowerContent.includes('duration:') && lowerContent.includes('maximum marks:')) {
+            console.log('Skipping - matches instruction pattern');
             continue;
           }
           
@@ -93,13 +128,15 @@ export default function LatexPreview({ content }: Props) {
           let questionText, solutionText;
           if (solutionMatch) {
             questionText = solutionMatch[1].trim();
-            solutionText = solutionMatch[2].trim();
+            solutionText = solutionMatch[2]?.trim() || '';
           } else {
             questionText = fullContent.trim();
             solutionText = '';
           }
           
-          if (questionText.length > 10) {
+          // More lenient length check
+          if (questionText.length > 5) {
+            console.log(`Adding question ${questionNumber}`);
             parsedQuestions.push({
               number: questionNumber,
               question: questionText,

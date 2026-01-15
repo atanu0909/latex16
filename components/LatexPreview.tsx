@@ -41,140 +41,76 @@ export default function LatexPreview({ content }: Props) {
       
       console.log('Questions content length:', questionsContent.length);
       
-      // Primary pattern: \noindent\textbf{Q.N} format (the one we instructed AI to use)
-      const primaryRegex = /\\noindent\\textbf\{Q\.(\d+)\}\s*\\hfill\s*\\textbf\{\[([^\]]+)\]\}([\s\S]*?)(?=\\noindent\\textbf\{Q\.\d+\}|\\end\{document\}|$)/g;
-      
-      let match;
-      while ((match = primaryRegex.exec(questionsContent)) !== null) {
-        const questionNumber = parseInt(match[1]);
-        const marks = match[2];
-        const fullContent = match[3];
-        
-        // Split by solution marker
-        const solutionMatch = fullContent.match(/([\s\S]*?)\\noindent\\textbf\{Solution:\}([\s\S]*?)(?=\\noindent\\rule|$)/);
-        
-        let questionText, solutionText;
-        if (solutionMatch) {
-          questionText = solutionMatch[1].trim();
-          solutionText = solutionMatch[2].trim();
-        } else {
-          questionText = fullContent.trim();
-          solutionText = '';
+      // ENHANCED: Try multiple patterns in order of specificity
+      const patterns = [
+        // Pattern 1: \noindent\textbf{Q.N} format (standard format)
+        {
+          regex: /\\noindent\\textbf\{Q\.(\d+)\}\s*\\hfill\s*\\textbf\{\[([^\]]+)\]\}([\s\S]*?)(?=\\noindent\\textbf\{Q\.\d+\}|\\end\{document\}|$)/g,
+          solutionPattern: /([\s\S]*?)\\noindent\\textbf\{Solution:\}([\s\S]*?)(?=\\noindent\\rule|$)/
+        },
+        // Pattern 2: \textbf{Q.N} \hfill format (common in patterns)
+        {
+          regex: /\\textbf\{Q\.(\d+)\}\s*\\hfill\s*\\textbf\{\[([^\]]+)\]\}([\s\S]*?)(?=\\textbf\{Q\.\d+\}|\\end\{document\}|$)/g,
+          solutionPattern: /([\s\S]*?)\\textbf\{Solution[:\.]?\}([\s\S]*?)(?=\\vspace|\\textbf\{Q\.|$)/
+        },
+        // Pattern 3: \subsection* format
+        {
+          regex: /\\subsection\*\{(?:Q\.|Question)\s*(\d+)\s*\[([^\]]+)\]\}([\s\S]*?)(?=\\subsection\*\{(?:Q\.|Question)|\\end\{document\}|$)/g,
+          solutionPattern: /([\s\S]*?)\\subsection\*\{Solution\}([\s\S]*?)(?=\\vspace|$)/
+        },
+        // Pattern 4: Simple numbered format (Q1, Q.1, Question 1, etc.)
+        {
+          regex: /(?:^|\\noindent\s*)(?:\\textbf\{)?(?:Q\.?|Question)\s*(\d+)(?:\})?(?:\s*\[([^\]]+)\])?[:\.\)]?\s*([\s\S]*?)(?=(?:^|\\noindent\s*)(?:\\textbf\{)?(?:Q\.?|Question)\s*\d+|\\end\{document\}|$)/gm,
+          solutionPattern: /([\s\S]*?)(?:\\textbf\{)?Solution[:\.\)]?(?:\})?[\s\S]*?([\s\S]*?)$/
+        },
+        // Pattern 5: Section-based
+        {
+          regex: /\\section\*\{(?:Question\s+)?(\d+)(?:\s*\[([^\]]+)\])?\}([\s\S]*?)(?=\\section\*\{|\\end\{document\}|$)/g,
+          solutionPattern: /([\s\S]*?)\\section\*\{Solution\}([\s\S]*?)$/
         }
-        
-        console.log(`Found question ${questionNumber} with ${marks}`);
-        
-        if (!isNaN(questionNumber) && questionText.length > 10) {
-          parsedQuestions.push({
-            number: questionNumber,
-            question: questionText,
-            solution: solutionText
-          });
-        }
-      }
+      ];
       
-      console.log(`Parsed ${parsedQuestions.length} questions with primary pattern`);
-      
-      // Fallback pattern 1: subsection format
-      if (parsedQuestions.length === 0) {
-        const subsectionRegex = /\\subsection\*\{(?:Q\.|Question)\s*(\d+)\s*\[([^\]]+)\]\}([\s\S]*?)(?=\\subsection\*\{(?:Q\.|Question)|\\end\{document\}|$)/g;
+      for (const pattern of patterns) {
+        let match;
+        pattern.regex.lastIndex = 0;
         
-        while ((match = subsectionRegex.exec(questionsContent)) !== null) {
+        while ((match = pattern.regex.exec(questionsContent)) !== null) {
           const questionNumber = parseInt(match[1]);
-          const marks = match[2];
+          const marks = match[2] || '';
           const fullContent = match[3];
           
-          // Split by solution marker
-          const solutionMatch = fullContent.match(/([\s\S]*?)\\subsection\*\{Solution\}([\s\S]*?)(?=\\vspace|$)/);
+          if (isNaN(questionNumber) || !fullContent || fullContent.trim().length < 10) continue;
           
-          if (!isNaN(questionNumber)) {
-            if (solutionMatch) {
-              parsedQuestions.push({
-                number: questionNumber,
-                question: solutionMatch[1].trim(),
-                solution: solutionMatch[2].trim()
-              });
-            } else {
-              parsedQuestions.push({
-                number: questionNumber,
-                question: fullContent.trim(),
-                solution: ''
-              });
-            }
+          // Filter out instructions/non-questions
+          if (fullContent.toLowerCase().includes('answer any') ||
+              fullContent.toLowerCase().includes('instructions to candidates')) {
+            continue;
+          }
+          
+          // Try to split by solution
+          const solutionMatch = fullContent.match(pattern.solutionPattern);
+          
+          let questionText, solutionText;
+          if (solutionMatch) {
+            questionText = solutionMatch[1].trim();
+            solutionText = solutionMatch[2].trim();
+          } else {
+            questionText = fullContent.trim();
+            solutionText = '';
+          }
+          
+          if (questionText.length > 10) {
+            parsedQuestions.push({
+              number: questionNumber,
+              question: questionText,
+              solution: solutionText
+            });
           }
         }
         
-        console.log(`Parsed ${parsedQuestions.length} questions with subsection pattern`);
-      }
-      
-      // If still no questions found, try other legacy patterns
-      if (parsedQuestions.length === 0) {
-        console.log('Trying legacy patterns...');
-        const patterns = [
-          // Standard subsection format with marks
-          /\\subsection\*\{Question\s+(\d+)\s*\[.*?\]\}([\s\S]*?)(?=\\subsection\*\{Question\s+\d+|\\end\{document\}|$)/g,
-          // Numbered format variations (1., Q1., Question 1, etc)
-          /(?:^|\n)(?:Q\.?|Question)?\s*(\d+)[\.\)]\s*([\s\S]*?)(?=(?:^|\n)(?:Q\.?|Question)?\s*\d+[\.\)]|\\end\{document\}|$)/gm,
-          // Section format
-          /\\section\*\{(?:Question\s+)?(\d+)(?:\s*\[.*?\])?\}([\s\S]*?)(?=\\section\*\{|\\end\{document\}|$)/g,
-          // Bold text format
-          /\\textbf\{(?:Question\s+)?(\d+)(?:[:\.\)]|\s*\[.*?\])?\}([\s\S]*?)(?=\\textbf\{(?:Question\s+)?\d+|\\end\{document\}|$)/g,
-          // Bare question format
-          /Question\s+(\d+)[:\.\)]?([\s\S]*?)(?=Question\s+\d+|\\end\{document\}|$)/gi,
-          // Enumerate item format
-          /\\item(?:\s*\[.*?\])?\s*(\d+)\.\s*([\s\S]*?)(?=\\item|\\end\{enumerate\}|$)/g,
-        ];
-
-        for (const questionRegex of patterns) {
-          let match;
-          questionRegex.lastIndex = 0; // Reset regex
-          
-          while ((match = questionRegex.exec(questionsContent)) !== null) {
-            const questionNumber = parseInt(match[1]);
-            if (isNaN(questionNumber)) continue;
-            
-            const fullContent = match[2];
-            
-            // Filter out instruction-like content early
-            if (fullContent.toLowerCase().includes('answer any') ||
-                fullContent.toLowerCase().includes('instructions to candidates') ||
-                fullContent.trim().length < 10) {
-              continue;
-            }
-            
-            // Split by solution marker - more flexible patterns
-            const solutionPatterns = [
-              /([\s\S]*?)\\subsection\*\{Solution\}([\s\S]*?)(?=\\subsection\*\{|\\vspace|$)/,
-              /([\s\S]*?)\\textbf\{Solution[:\.\)]?\}([\s\S]*?)(?=\\subsection\*\{|\\textbf\{(?:Question|Solution)|$)/,
-              /([\s\S]*?)\\section\*\{Solution\}([\s\S]*?)(?=\\section\*\{|$)/,
-              /([\s\S]*?)\n\s*Solution[:\.\)]?\s*([\s\S]*?)(?=\n\s*(?:Question|Q\.?)\s*\d+|$)/i,
-              /([\s\S]*?)\\textit\{Solution[:\.\)]?\}([\s\S]*?)(?=\\textit\{|$)/,
-            ];
-            
-            let found = false;
-            for (const solPattern of solutionPatterns) {
-              const solutionMatch = fullContent.match(solPattern);
-              if (solutionMatch) {
-                parsedQuestions.push({
-                  number: questionNumber,
-                  question: solutionMatch[1].trim(),
-                  solution: solutionMatch[2].trim()
-                });
-                found = true;
-                break;
-              }
-            }
-            
-            if (!found) {
-              parsedQuestions.push({
-                number: questionNumber,
-                question: fullContent.trim(),
-                solution: ''
-              });
-            }
-          }
-          
-          if (parsedQuestions.length > 0) break;
+        if (parsedQuestions.length > 0) {
+          console.log(`Found ${parsedQuestions.length} questions with pattern`);
+          break;
         }
       }
 

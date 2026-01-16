@@ -193,47 +193,23 @@ export default function QuestionCustomizer({ config, onConfigChange }: Props) {
             </div>
           </div>
 
-          {/* Question Types */}
-          <div>
-            <label className="block text-base sm:text-lg font-semibold text-gray-700 mb-2 sm:mb-3">
-              📝 Question Types (select at least one)
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-              {QUESTION_TYPES.map(type => (
-                <button
-                  key={type.value}
-                  onClick={() => handleQuestionTypeToggle(type.value)}
-                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base ${
-                    config.questionTypes.includes(type.value)
-                      ? 'bg-blue-600 text-white shadow-lg scale-105'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {type.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Difficulty Level */}
-          <div>
-            <label className="block text-base sm:text-lg font-semibold text-gray-700 mb-2 sm:mb-3">
-              🎯 Difficulty Level
-            </label>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-              {DIFFICULTIES.map(diff => (
-                <button
-                  key={diff.value}
-                  onClick={() => handleDifficultyChange(diff.value)}
-                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base ${
-                    config.difficulty === diff.value
-                      ? 'bg-blue-600 text-white shadow-lg scale-105'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {diff.label}
-                </button>
-              ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <label className="block text-base sm:text-lg font-semibold text-gray-700 mb-2 sm:mb-3">
+                🎯 Difficulty Level
+              </label>
+              <select
+                value={config.difficulty}
+                onChange={(e) => handleDifficultyChange(e.target.value)}
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-base sm:text-lg font-medium bg-white"
+              >
+                {DIFFICULTIES.map(diff => (
+                  <option key={diff.value} value={diff.value}>
+                    {diff.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -337,7 +313,6 @@ export default function QuestionCustomizer({ config, onConfigChange }: Props) {
               <li>• Subject: <span className="font-medium">{SUBJECTS.find(s => s.value === config.subject)?.label}</span></li>
               <li>• Total 1 Mark Questions: <span className="font-medium">{getTotalQuestionsByType()}</span></li>
               <li>• Total Questions by Marks: <span className="font-medium">{getTotalQuestionsByMarks()}</span></li>
-              <li>• Question Types: <span className="font-medium">{config.questionTypes.map(t => QUESTION_TYPES.find(qt => qt.value === t)?.label).join(', ') || 'None'}</span></li>
               <li>• Difficulty: <span className="font-medium">{DIFFICULTIES.find(d => d.value === config.difficulty)?.label}</span></li>
             </ul>
           </div>

@@ -32,6 +32,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [latexContent, setLatexContent] = useState('');
+  const [isFromPattern, setIsFromPattern] = useState(false);
   const [config, setConfig] = useState<QuestionConfig>({
     subject: 'mathematics',
     questionTypes: ['problem-solving', 'conceptual'],
@@ -99,6 +100,7 @@ export default function Home() {
     setLoading(true);
     setError('');
     setLatexContent('');
+    setIsFromPattern(!!patternFile); // Track if pattern was uploaded
 
     try {
       const formData = new FormData();
@@ -393,7 +395,7 @@ export default function Home() {
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 animate-fadeIn">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
-                ✅ Generated Questions
+                ✅ Generated Questions {isFromPattern && '(Pattern-based)'}
               </h2>
               <div className="flex gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
                 <button
@@ -422,7 +424,18 @@ export default function Home() {
               </div>
             </div>
 
-            <LatexPreview content={latexContent} />
+            {!isFromPattern && <LatexPreview content={latexContent} />}
+            {isFromPattern && (
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 text-center border-2 border-blue-200">
+                <div className="text-5xl mb-4">📋</div>
+                <p className="text-lg font-semibold text-gray-800 mb-2">
+                  Questions Generated from Pattern
+                </p>
+                <p className="text-sm text-gray-600">
+                  Use the download buttons above to get your questions in LaTeX or PDF format
+                </p>
+              </div>
+            )}
           </div>
         )}
 

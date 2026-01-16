@@ -175,6 +175,15 @@ export default async function handler(
 
     tempDir = fs.mkdtempSync(path.join(tmpBaseDir, 'latex-'));
 
+    // Check if pdflatex is installed
+    try {
+      await execPromise('which pdflatex');
+    } catch (checkError) {
+      return res.status(500).json({
+        error: 'PDF generation is not available. pdflatex is not installed. Please download the LaTeX file instead and compile it locally, or install texlive-latex-base and texlive-latex-extra packages.',
+      });
+    }
+
     // Write LaTeX content to file
     const texFile = path.join(tempDir, 'questions.tex');
     fs.writeFileSync(texFile, processedLatex, 'utf-8');

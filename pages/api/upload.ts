@@ -297,6 +297,269 @@ EXAMPLES:
    - Provide actual datasets
    - Realistic numbers
    - Step-by-step calculations shown
+`,
+    english: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 ENGLISH - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BALANCED COVERAGE:
+   - Literature, Grammar, Composition, Comprehension - equal weightage
+
+2. QUESTION TYPES:
+   - 30% Comprehension passages with questions
+   - 25% Grammar and language usage
+   - 25% Literature analysis (poems, prose, drama)
+   - 20% Creative writing and composition
+
+3. QUALITY STANDARDS:
+   - Include actual text excerpts for analysis
+   - Grammar questions with specific examples
+   - Literary questions testing critical thinking
+   - Essay/letter topics with clear instructions
+`,
+    hindi: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🇮🇳 HINDI - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. COVERAGE:
+   - साहित्य (Literature), व्याकरण (Grammar), रचना (Composition)
+
+2. QUESTION DISTRIBUTION:
+   - 30% गद्यांश और पद्यांश (Comprehension)
+   - 30% व्याकरण (Grammar - समास, संधि, etc.)
+   - 25% साहित्य विश्लेषण (Literary analysis)
+   - 15% निबंध और पत्र लेखन (Essays and letters)
+
+3. INCLUDE:
+   - Actual Hindi text excerpts
+   - Proper Devanagari script
+   - Mix of modern and classical literature
+`,
+    geography: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🗺️ GEOGRAPHY - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. TOPIC BALANCE:
+   - Physical Geography and Human Geography - equal coverage
+
+2. QUESTION TYPES:
+   - 35% Map-based questions (identify, locate, mark)
+   - 30% Descriptive (explain phenomena, processes)
+   - 20% Analytical (causes, effects, comparisons)
+   - 15% Numerical (population, resources, calculations)
+
+3. INCLUDE:
+   - Specific place names and coordinates
+   - Climate data and statistics
+   - Map references where applicable
+   - Current geographical issues
+`,
+    'political-science': `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏛️ POLITICAL SCIENCE - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BALANCED TOPICS:
+   - Political Theory, Indian Politics, International Relations
+
+2. QUESTION TYPES:
+   - 40% Analytical (analyze concepts, institutions, systems)
+   - 30% Descriptive (explain concepts, processes)
+   - 20% Comparative (compare systems, ideologies)
+   - 10% Current affairs and case studies
+
+3. QUALITY:
+   - Include real political examples
+   - Reference specific constitutions, laws, policies
+   - Test critical thinking about democracy, rights, governance
+`,
+    'social-science': `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 SOCIAL SCIENCE - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. INTEGRATED APPROACH:
+   - Cover History, Geography, Civics, Economics equally
+
+2. QUESTION DISTRIBUTION:
+   - 25% History (events, movements, personalities)
+   - 25% Geography (physical and human)
+   - 25% Civics (constitution, government, rights)
+   - 25% Economics (basic economic concepts)
+
+3. INTERDISCIPLINARY:
+   - Connect topics across subjects
+   - Real-world applications
+   - Current social issues
+`,
+    accountancy: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 ACCOUNTANCY - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. PRACTICAL FOCUS:
+   - 70% Numerical problems (journal entries, ledger, final accounts)
+   - 20% Theory (concepts, principles, standards)
+   - 10% Case-based scenarios
+
+2. INCLUDE:
+   - Complete accounting problems with transactions
+   - T-accounts and double-entry examples
+   - Financial statement preparation
+   - Ratio analysis with actual numbers
+`,
+    'business-studies': `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💼 BUSINESS STUDIES - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. TOPIC COVERAGE:
+   - Management, Marketing, Finance, HR - balanced
+
+2. QUESTION TYPES:
+   - 40% Case studies and scenarios
+   - 30% Analytical (explain, analyze, evaluate)
+   - 20% Descriptive (define, describe functions)
+   - 10% Numerical (simple calculations)
+
+3. REAL-WORLD:
+   - Use actual business examples
+   - Current business practices
+   - Practical management scenarios
+`,
+    psychology: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 PSYCHOLOGY - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BALANCED APPROACH:
+   - Cognitive, Behavioral, Social, Developmental psychology
+
+2. QUESTION TYPES:
+   - 40% Application (case studies, real-life scenarios)
+   - 30% Analytical (explain theories, compare approaches)
+   - 20% Experimental (design studies, interpret results)
+   - 10% Descriptive (define concepts, describe processes)
+
+3. INCLUDE:
+   - Reference to classic experiments
+   - Real psychological phenomena
+   - Ethical considerations
+`,
+    sociology: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👥 SOCIOLOGY - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. COMPREHENSIVE COVERAGE:
+   - Social institutions, stratification, change, research methods
+
+2. QUESTION DISTRIBUTION:
+   - 40% Analytical (analyze social issues, institutions)
+   - 30% Theoretical (explain concepts, theories)
+   - 20% Contemporary (current social problems)
+   - 10% Research methods and data interpretation
+
+3. FOCUS:
+   - Real social issues and examples
+   - Reference sociological thinkers
+   - Cultural diversity and social change
+`,
+    philosophy: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💭 PHILOSOPHY - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. TOPIC BALANCE:
+   - Ethics, Logic, Metaphysics, Epistemology equally
+
+2. QUESTION TYPES:
+   - 40% Analytical (analyze arguments, evaluate positions)
+   - 30% Critical thinking (identify fallacies, construct arguments)
+   - 20% Comparative (compare philosophers' views)
+   - 10% Applied ethics (real-life dilemmas)
+
+3. INCLUDE:
+   - Reference to major philosophers
+   - Logical reasoning problems
+   - Ethical dilemmas and thought experiments
+`,
+    'environmental-science': `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌱 ENVIRONMENTAL SCIENCE - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. INTEGRATED APPROACH:
+   - Ecology, Pollution, Conservation, Sustainability
+
+2. QUESTION MIX:
+   - 35% Analytical (environmental issues, impacts, solutions)
+   - 30% Descriptive (ecosystems, cycles, processes)
+   - 20% Numerical (pollution calculations, ecological footprint)
+   - 15% Case studies (real environmental problems)
+
+3. CURRENT FOCUS:
+   - Climate change, biodiversity
+   - Sustainable practices
+   - Environmental laws and policies
+`,
+    sanskrit: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🕉️ SANSKRIT - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. BALANCED CONTENT:
+   - व्याकरण (Grammar), साहित्य (Literature), अनुवाद (Translation)
+
+2. QUESTION TYPES:
+   - 35% व्याकरण (Sandhi, Samasa, Dhatu, Pratyaya)
+   - 30% गद्य और पद्य (Prose and poetry comprehension)
+   - 20% अनुवाद (Translation Sanskrit to English/Hindi)
+   - 15% रचना (Composition in Sanskrit)
+
+3. USE:
+   - Proper Devanagari script
+   - Classical texts references
+   - Grammatical rules with examples
+`,
+    'general-science': `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 GENERAL SCIENCE - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. EQUAL COVERAGE:
+   - Physics, Chemistry, Biology - equal parts (33% each)
+
+2. QUESTION DISTRIBUTION:
+   - 40% Conceptual (explain phenomena, processes)
+   - 30% Factual (identify, name, define)
+   - 20% Application (real-life science)
+   - 10% Numerical (basic calculations)
+
+3. ACCESSIBLE:
+   - Age-appropriate content
+   - Everyday science examples
+   - Practical applications
+`,
+    engineering: `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚙️ ENGINEERING - SMART QUESTION GENERATION GUIDELINES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. PRACTICAL FOCUS:
+   - 50% Problem-solving with calculations
+   - 25% Design and analysis
+   - 15% Theoretical concepts
+   - 10% Diagram-based
+
+2. INCLUDE:
+   - Real engineering problems
+   - Standard formulas and units
+   - Circuit diagrams, mechanical drawings where needed
+   - Step-by-step solutions
 `
   };
 

@@ -207,7 +207,12 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ latex: latexContent, includeSolutions }),
+        body: JSON.stringify({ 
+          latex: latexContent, 
+          includeSolutions,
+          subject: config.subject,
+          studentClass: config.studentClass
+        }),
       });
 
       if (!response.ok) {
@@ -219,7 +224,11 @@ export default function Home() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `math_questions_${Date.now()}.pdf`;
+      // Format: studdybuddy_subjectname_class_date
+      const dateStr = new Date().toISOString().split('T')[0];
+      const sanitizedSubject = config.subject.toLowerCase().replace(/[^a-z0-9]+/g, '');
+      const sanitizedClass = config.studentClass.replace(/[^a-z0-9]+/g, '');
+      a.download = `studdybuddy_${sanitizedSubject}_${sanitizedClass}_${dateStr}.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

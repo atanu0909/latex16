@@ -130,7 +130,7 @@ export default async function handler(
   let tempDir: string | null = null;
 
   try {
-    const { latex, includeSolutions = true } = req.body;
+    const { latex, includeSolutions = true, subject = 'subject', studentClass = 'class' } = req.body;
 
     if (!latex) {
       return res.status(400).json({ error: 'No LaTeX content provided' });
@@ -260,8 +260,12 @@ export default async function handler(
       // Read PDF file
       const pdfData = fs.readFileSync(pdfFile);
 
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const filename = `math_questions_${timestamp}.pdf`;
+      // Format: studdybuddy_subjectname_class_date
+      const now = new Date();
+      const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+      const sanitizedSubject = subject.toLowerCase().replace(/[^a-z0-9]+/g, '');
+      const sanitizedClass = studentClass.replace(/[^a-z0-9]+/g, '');
+      const filename = `studdybuddy_${sanitizedSubject}_${sanitizedClass}_${dateStr}.pdf`;
 
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
